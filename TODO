@@ -1,0 +1,44 @@
+COMMANDS
+
+- Decision maker: add a way for the bot to respond to queries like "x
+  or y?". For historical reasons, also support "ou" as a trigger
+  keyword.
+
+      <person> bot: go to the beach or go to the mountains?
+      <bot> go to the beach, of course!
+
+- URL title fetcher. When an URL is popped into the channel, it grabs
+  the title. Need to be careful with large files, so use HTTP HEAD to
+  figure out whether is worth the trouble (and if it says is an
+  HTML). Then pull up and extract the title.
+
+- URL repository, with counts. So people can look at old / most common
+  recommended links.
+
+- Some sort of dictionary, that people can add and remove information
+  dynamically. Useful for storing information that are helpful but
+  scathered among various sites: e.g. max hours.
+
+- %team: ability to create/add-people/remove-people from a team. The
+  command then can be used to mass ping people.
+
+      <person> %team pod let's eat folks!
+      <bot> personA: personB: personC: let's eat folks!
+
+- Ability to schedule alarms:
+
+      <person> %alarm 12pm it is high noon
+      ...
+      <bot> person: it is high noon!
+
+OTHER
+
+- Organize so the handlers can spawn Go routines and asynchronously
+  send messages.
+
+- Handler that expose other interfaces to the bot (both the message
+  log and ability to "say" things back). This would allow trying out
+  features outside from the bot code.
+
+- Versioning of the DB tables, so we can upgrade them if we add
+  columns.

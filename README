@@ -1,0 +1,14 @@
+SIMPLE IRC BOT
+
+Main use case is to provide %tell and %oka commands, but other
+commands are welcome. The code also serves as a testbed to try
+things out.
+
+The bot creates a SQLite DB file to save information like the messages
+to tell people later.
+
+Connect information is set using command line flags.
+
+Get the bot using:
+
+    $ go get github.com/cmarcelo/ircbot
