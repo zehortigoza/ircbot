@@ -30,6 +30,7 @@ import (
 var (
 	serverAddr = flag.String("server", "localhost:6667", "server to connect")
 	useTLS     = flag.Bool("tls", false, "use TLS to connect")
+	insecure   = flag.Bool("insecure", false, "don't verify the certificate when using TLS")
 	nickname   = flag.String("nick", "bot", "nickname used by the bot")
 	channels   = flag.String("channels", "#test", "list of channels, comma separated")
 	dbFilename = flag.String("db", "bot.db", "database file used by commands")
@@ -93,7 +94,12 @@ func main() {
 
 	var c io.ReadWriteCloser
 	if *useTLS {
-		c, err = tls.Dial("tcp", *serverAddr, nil)
+		var cfg *tls.Config
+		if *insecure {
+			log.Println("NOTE: skipping certificate verification!")
+			cfg = &tls.Config{InsecureSkipVerify: true}
+		}
+		c, err = tls.Dial("tcp", *serverAddr, cfg)
 	} else {
 		c, err = net.Dial("tcp", *serverAddr)
 	}
