@@ -81,6 +81,12 @@ func main() {
 	}
 	add(karma)
 
+	ai, err := NewAI()
+	if err != nil {
+		log.Fatal(err)
+	}
+	add(ai)
+
 	//
 	// Connect to the server.
 	//
