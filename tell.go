@@ -43,7 +43,14 @@ CREATE TABLE IF NOT EXISTS tell (id INTEGER NOT NULL PRIMARY KEY, ch TEXT, src T
 
 func (t *Tell) HandleMessage(conn *Conn, m *irc.Message) {
 	// TODO: Should nick change count as activity?
-	// TODO: Should join channel count as activity?
+
+	join := AcceptJoin(m)
+	if join != nil && join.channel != "" {
+		if tellHaveMsg(t.db, join.channel, join.user) {
+			say(conn, join.channel, fmt.Sprintf("%s: Ping\n", join.user))
+		}
+	}
+
 	msg := AcceptPRIVMSG(m)
 	if msg == nil || msg.channel == "" {
 		return
@@ -85,6 +92,20 @@ type tellRecord struct {
 	ch, src, dst, msg string
 	dt                time.Time
 	read              bool
+}
+
+func tellHaveMsg(db *sql.DB, ch, dst string) bool {
+	rows, err := db.Query("SELECT id FROM tell WHERE ch = ? AND read = 0 AND dst = ? LIMIT 1", ch, dst)
+	if err != nil {
+		log.Println("couldnt query")
+		return false
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		return true
+	}
+	return false
 }
 
 func tellRead(db *sql.DB, ch, dst string) ([]*tellRecord, error) {

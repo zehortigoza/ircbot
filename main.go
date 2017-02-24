@@ -170,6 +170,11 @@ type Msg struct {
 	content string
 }
 
+type UserJoin struct {
+    user    string
+    channel string
+}
+
 func AcceptPRIVMSG(m *irc.Message) *Msg {
 	if m.Command != irc.PRIVMSG {
 		return nil
@@ -186,4 +191,18 @@ func AcceptPRIVMSG(m *irc.Message) *Msg {
 		msg.channel = m.Params[0]
 	}
 	return msg
+}
+
+func AcceptJoin(m *irc.Message) *UserJoin {
+    if m.Command != irc.JOIN {
+        return nil
+    }
+    join := &UserJoin{
+        user: m.Prefix.Name,
+    }
+    if strings.HasPrefix(m.Trailing, "#") {
+        join.channel = m.Trailing
+    }
+
+    return join
 }
