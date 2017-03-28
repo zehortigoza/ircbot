@@ -48,7 +48,13 @@ func (t *Tell) HandleMessage(conn *Conn, m *irc.Message) {
 	if join != nil && join.channel != "" {
 		count := tellCount(t.db, join.channel, join.user)
 		if count > 0 {
-			say(conn, join.channel, fmt.Sprintf("%s: tenho %d mensagens deste canal para voce, quando voce falar algo aqui eu conto\n", join.user, count))
+			var text string
+			if count == 1 {
+				text = fmt.Sprintf("%s: I have a message for you, say something and I'll tell you\n", join.user)
+			} else {
+				text = fmt.Sprintf("%s: I have %d messages for you, say something and I'll tell you\n", join.user, count)
+			}
+			say(conn, join.channel, text)
 		}
 	}
 
