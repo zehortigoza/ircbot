@@ -46,8 +46,9 @@ func (t *Tell) HandleMessage(conn *Conn, m *irc.Message) {
 
 	join := AcceptJoin(m)
 	if join != nil && join.channel != "" {
-		if tellHaveMsg(t.db, join.channel, join.user) {
-			say(conn, join.channel, fmt.Sprintf("%s: Ping\n", join.user))
+		count := tellCount(t.db, join.channel, join.user)
+		if count > 0 {
+			say(conn, join.channel, fmt.Sprintf("%s: tenho %d mensagens deste canal para voce, quando voce falar algo aqui eu conto\n", join.user, count))
 		}
 	}
 
@@ -94,18 +95,22 @@ type tellRecord struct {
 	read              bool
 }
 
-func tellHaveMsg(db *sql.DB, ch, dst string) bool {
-	rows, err := db.Query("SELECT id FROM tell WHERE ch = ? AND read = 0 AND dst = ? LIMIT 1", ch, dst)
+func tellCount(db *sql.DB, ch, dst string) int {
+	rows, err := db.Query("SELECT count(id) FROM tell WHERE ch = ? AND read = 0 AND dst = ?", ch, dst)
 	if err != nil {
 		log.Println("couldnt query")
-		return false
+		return 0
 	}
 	defer rows.Close()
 
+	var count int
 	if rows.Next() {
-		return true
+		err = rows.Scan(&count)
+		if err != nil {
+			log.Printf("error scanning tell count: %s", err)
+		}
 	}
-	return false
+	return count
 }
 
 func tellRead(db *sql.DB, ch, dst string) ([]*tellRecord, error) {
