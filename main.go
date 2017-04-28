@@ -88,6 +88,12 @@ func main() {
 	}
 	add(ai)
 
+	info, err := NewInfo()
+	if err != nil {
+		log.Fatal(err)
+	}
+	add(info)
+
 	//
 	// Connect to the server.
 	//
