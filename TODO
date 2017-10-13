@@ -1,12 +1,5 @@
 COMMANDS
 
-- Decision maker: add a way for the bot to respond to queries like "x
-  or y?". For historical reasons, also support "ou" as a trigger
-  keyword.
-
-      <person> bot: go to the beach or go to the mountains?
-      <bot> go to the beach, of course!
-
 - URL title fetcher. When an URL is popped into the channel, it grabs
   the title. Need to be careful with large files, so use HTTP HEAD to
   figure out whether is worth the trouble (and if it says is an
