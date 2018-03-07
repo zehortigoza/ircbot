@@ -29,10 +29,11 @@ import (
 )
 
 var (
-	serverAddr = flag.String("server", "localhost:6667", "server to connect")
-	useTLS     = flag.Bool("tls", false, "use TLS to connect")
-	insecure   = flag.Bool("insecure", false, "don't verify the certificate when using TLS")
-	nickname   = flag.String("nick", "bot", "nickname used by the bot")
+	serverAddr = flag.String("server", "otcirc.jf.intel.com:6697", "server to connect")
+	useTLS     = flag.Bool("tls", true, "use TLS to connect")
+	insecure   = flag.Bool("insecure", true, "don't verify the certificate when using TLS")
+	nickname   = flag.String("nick", "fake_boto", "nickname used by the bot")
+	//channels   = flag.String("channels", "#drones,#gfx-br,#jf-br,#otc-br", "list of channels, comma separated")
 	channels   = flag.String("channels", "#test", "list of channels, comma separated")
 	dbFilename = flag.String("db", "bot.db", "database file used by commands")
 	verbose    = flag.Bool("v", false, "verbose mode")
