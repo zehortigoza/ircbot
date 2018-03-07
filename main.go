@@ -35,6 +35,7 @@ var (
 	channels   = flag.String("channels", "#test", "list of channels, comma separated")
 	dbFilename = flag.String("db", "bot.db", "database file used by commands")
 	verbose    = flag.Bool("v", false, "verbose mode")
+	timezone   = flag.String("timezone", "America/Los_Angeles", "Timezone")
 )
 
 type Handler interface {
@@ -87,6 +88,12 @@ func main() {
 		log.Fatal(err)
 	}
 	add(ai)
+
+	worldcup, err := NewWorldCup(*timezone)
+	if err != nil {
+		log.Fatal(err)
+	}
+	add(worldcup)
 
 	//
 	// Connect to the server.
