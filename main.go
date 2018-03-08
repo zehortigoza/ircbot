@@ -22,6 +22,7 @@ import (
 	"log"
 	"net"
 	"strings"
+	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sorcix/irc"
@@ -35,16 +36,42 @@ var (
 	channels   = flag.String("channels", "#test", "list of channels, comma separated")
 	dbFilename = flag.String("db", "bot.db", "database file used by commands")
 	verbose    = flag.Bool("v", false, "verbose mode")
+	timezone   = flag.String("timezone", "America/Los_Angeles", "Timezone")
 )
 
 type Handler interface {
 	HandleMessage(conn *Conn, m *irc.Message)
+	HandleHelp() string
 }
 
 type HandlerFunc func(conn *Conn, m *irc.Message)
 
 func (f HandlerFunc) HandleMessage(conn *Conn, m *irc.Message) {
 	f(conn, m)
+}
+
+func mainHandleMessage(conn *Conn, m *irc.Message, handlers []Handler) {
+	msg := AcceptPRIVMSG(m)
+	if msg == nil || msg.channel == "" {
+		return
+	}
+
+	content := strings.Fields(msg.content)
+	if len(content) == 0 {
+		return
+	}
+
+	if content[0] != "%help" {
+		return
+	}
+
+	say(conn, m.Params[0], "Commands available:\n")
+	for _, h := range handlers {
+		help := h.HandleHelp()
+		if len(help) > 0 {
+			say(conn, m.Params[0], fmt.Sprintf("    %s\n", help))
+		}
+	}
 }
 
 func main() {
@@ -67,8 +94,17 @@ func main() {
 	// Create and add the handlers.
 	//
 
-	add(HandlerFunc(janitor))
-	add(HandlerFunc(oka))
+	janitor, err := NewJanitor()
+	if err != nil {
+		log.Fatal(err)
+	}
+	add(janitor)
+
+	oka, err := NewOka()
+	if err != nil {
+		log.Fatal(err)
+	}
+	add(oka)
 
 	tell, err := NewTell(db)
 	if err != nil {
@@ -87,6 +123,12 @@ func main() {
 		log.Fatal(err)
 	}
 	add(ai)
+
+	worldcup, err := NewWorldCup(*timezone)
+	if err != nil {
+		log.Fatal(err)
+	}
+	add(worldcup)
 
 	//
 	// Connect to the server.
@@ -139,6 +181,7 @@ func main() {
 		if *verbose {
 			log.Print(m)
 		}
+		mainHandleMessage(conn, m, handlers)
 		for _, h := range handlers {
 			h.HandleMessage(conn, m)
 		}

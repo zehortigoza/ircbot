@@ -39,6 +39,10 @@ CREATE TABLE IF NOT EXISTS karma (word TEXT, src TEXT, dt DATE, value INT);
 	return &Karma{db: db}, nil
 }
 
+func (k *Karma) HandleHelp() string {
+	return "%karma <something>, <something>++ and <something>--"
+}
+
 func (k *Karma) HandleMessage(conn *Conn, m *irc.Message) {
 	msg := AcceptPRIVMSG(m)
 	if msg == nil || msg.channel == "" {

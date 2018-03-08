@@ -29,6 +29,10 @@ func NewAI() (*AI, error) {
 	return &AI{}, nil
 }
 
+func (t *AI) HandleHelp() string {
+	return "<bot_name>: <option 1> or <option 2>?"
+}
+
 func handleOr(conn *Conn, msg *Msg, m *irc.Message, separator string) bool {
 	if !strings.Contains(m.Trailing, separator) {
 		return false

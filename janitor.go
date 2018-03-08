@@ -20,8 +20,19 @@ import (
 	"github.com/sorcix/irc"
 )
 
+type Janitor struct {
+}
+
+func NewJanitor() (*Janitor, error) {
+	return &Janitor{}, nil
+}
+
+func (j *Janitor) HandleHelp() string {
+	return ""
+}
+
 // TODO: Handle when kicked.
-func janitor(conn *Conn, m *irc.Message) {
+func (j *Janitor) HandleMessage(conn *Conn, m *irc.Message) {
 	switch m.Command {
 	case irc.RPL_WELCOME:
 		log.Printf("Server said welcome, joining channels: %s", *channels)

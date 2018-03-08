@@ -21,7 +21,18 @@ import (
 	"github.com/sorcix/irc"
 )
 
-func oka(conn *Conn, m *irc.Message) {
+type Oka struct {
+}
+
+func NewOka() (*Oka, error) {
+	return &Oka{}, nil
+}
+
+func (o *Oka) HandleHelp() string {
+	return "%oka"
+}
+
+func (o *Oka) HandleMessage(conn *Conn, m *irc.Message) {
 	msg := AcceptPRIVMSG(m)
 	if msg == nil || msg.channel == "" || !strings.HasPrefix(msg.content, "%oka") {
 		return
