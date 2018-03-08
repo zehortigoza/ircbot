@@ -24,8 +24,8 @@ import (
 
 type WorldCup struct {
 	timezone *time.Location
-	start time.Time
-	end time.Time
+	start    time.Time
+	end      time.Time
 }
 
 func NewWorldCup(timezone string) (*WorldCup, error) {
@@ -38,7 +38,7 @@ func NewWorldCup(timezone string) (*WorldCup, error) {
 
 	start_t := time.Date(2018, time.June, 14, 18, 0, 0, 0, moscow_loc)
 	start_t = start_t.In(loc)
-	end_t  := time.Date(2018, time.July, 15, 18, 0, 0 ,0, moscow_loc)
+	end_t := time.Date(2018, time.July, 15, 18, 0, 0, 0, moscow_loc)
 	end_t = end_t.In(loc)
 
 	return &WorldCup{timezone: loc, start: start_t, end: end_t}, nil

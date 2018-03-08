@@ -18,11 +18,11 @@ import (
 	"crypto/tls"
 	"database/sql"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net"
 	"strings"
-	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sorcix/irc"
@@ -214,8 +214,8 @@ type Msg struct {
 }
 
 type UserJoin struct {
-    user    string
-    channel string
+	user    string
+	channel string
 }
 
 func AcceptPRIVMSG(m *irc.Message) *Msg {
@@ -237,15 +237,15 @@ func AcceptPRIVMSG(m *irc.Message) *Msg {
 }
 
 func AcceptJoin(m *irc.Message) *UserJoin {
-    if m.Command != irc.JOIN {
-        return nil
-    }
-    join := &UserJoin{
-        user: m.Prefix.Name,
-    }
-    if strings.HasPrefix(m.Trailing, "#") {
-        join.channel = m.Trailing
-    }
+	if m.Command != irc.JOIN {
+		return nil
+	}
+	join := &UserJoin{
+		user: m.Prefix.Name,
+	}
+	if strings.HasPrefix(m.Trailing, "#") {
+		join.channel = m.Trailing
+	}
 
-    return join
+	return join
 }
