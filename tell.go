@@ -41,6 +41,10 @@ CREATE TABLE IF NOT EXISTS tell (id INTEGER NOT NULL PRIMARY KEY, ch TEXT, src T
 	return &Tell{db: db}, nil
 }
 
+func (t *Tell) HandleHelp() string {
+	return "%tell <nick> <message>"
+}
+
 func (t *Tell) HandleMessage(conn *Conn, m *irc.Message) {
 	// TODO: Should nick change count as activity?
 

@@ -44,6 +44,10 @@ func NewWorldCup(timezone string) (*WorldCup, error) {
 	return &WorldCup{timezone: loc, start: start_t, end: end_t}, nil
 }
 
+func (w *WorldCup) HandleHelp() string {
+	return "%worldcup"
+}
+
 func (w *WorldCup) HandleMessage(conn *Conn, m *irc.Message) {
 	msg := AcceptPRIVMSG(m)
 	if msg == nil || msg.channel == "" {
