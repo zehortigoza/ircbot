@@ -37,6 +37,7 @@ var (
 	dbFilename = flag.String("db", "bot.db", "database file used by commands")
 	verbose    = flag.Bool("v", false, "verbose mode")
 	timezone   = flag.String("timezone", "America/Los_Angeles", "Timezone")
+	admin      = flag.String("bot_admin", "cmarcelo", "Bot admin")
 )
 
 type Handler interface {
@@ -165,6 +166,12 @@ func main() {
 		Params:   []string{*nickname, "0", "*"},
 		Trailing: *nickname,
 	})
+
+	cron, err := NewCron(conn, *timezone, *admin)
+	if err != nil {
+		log.Fatal(err)
+	}
+	add(cron)
 
 	//
 	// Process messages.
