@@ -76,7 +76,7 @@ func (w *WorldCup) HandleMessage(conn *Conn, m *irc.Message) {
 		hours = hours % 24
 
 		if content[0] == "%hexa" {
-			text = fmt.Sprintf("%d dias, %d horas e %d minutos para o hexa, vai Brasil \\o/\n", days, hours, minutes)
+			text = fmt.Sprintf("%d dias, %d horas e %d minutos para o inicio da campanha do hexa, vai Brasil \\o/\n", days, hours, minutes)
 		} else {
 			text = fmt.Sprintf("%d days, %d hours and %d minutes until the beginning of 2018 World Cup\n", days, hours, minutes)
 		}
